@@ -49,8 +49,7 @@ PFPA-MCE/
 │ ├── train.py                             # 多任务联合训练脚本
 │ ├── evaluate.py                          # 灌注回归精度评估
 │ ├── split_train_val.py                   # 多任务数据集训练 / 验证集划分
-│ ├── run_ablation_studies.py              # 全管线消融实验自动化
-│ └── README.md                            # 扩展方案详细说明
+│ └── run_ablation_studies.py              # 全管线消融实验自动化
 ├── README.md                              # 英文文档
 └── README_zh.md                           # 中文文档（本文件）
 
