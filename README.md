@@ -1,7 +1,7 @@
 # PFPA-MCE: Pixel-Level Quantitative Microcirculation Perfusion Analysis
 
 ## 📌 Open Source Notice for Blind Review
-To comply with double-blind peer review policies and protect unpublished contributions, the core algorithmic implementations of **MRA-Gate** (in ADR-Net) and **SL-PLMB** (fusion algorithm) have been temporarily withheld (`NotImplementedError` raised in forward passes). 
+To comply with double-blind peer review policies and protect unpublished contributions, the core algorithmic implementations of **MRA-Gate** (in ADR-Net) and **SL-PLMB** (fusion algorithm) have been temporarily withheld. 
 
 All other components, including baseline models, STFT filtering, Wei's kinetic modeling, AHA 17-segment mapping, and evaluation scripts are fully open-sourced to demonstrate the clinical pipeline. The complete source code will be released upon paper acceptance.
 
@@ -75,12 +75,12 @@ Evaluated on static MCE frames with expert annotations. ADR-Net achieves optimal
 
 Evaluated using the Coefficient of Variation (CV) across multi-view sequences. Lower CV indicates higher clinical reproducibility.
 
-| Evaluation Metric | Valid Samples | Method A (No TF) Mean CV | Method B (TF Single) Mean CV | Method C (TF + Fused) Mean CV | Absolute Decrease (B→C) | Relative Decrease Rate (B→C) | 
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | 
-| Global Blood Volume A | 3 | 34.4% | 34.4% | 11.4% | 23.0% | 67.0% | 
-| Global Blood Flow Velocity β | 3 | 54.2% | 54.4% | 19.0% | 35.4% | 65.0% | 
-| Global Myocardial Blood Flow (MBF) | 3 | 61.8% | 62.0% | 19.7% | 42.3% | 68.2% | 
-| Apical Cap Blood Flow (Seg17) | 3 | 79.4% | 79.5% | 22.1% | 57.4% | 72.2% |
+| Evaluation Metric | Method A (No TF) Mean CV | Method B (TF Single) Mean CV | Method C (TF + Fused) Mean CV | Absolute Decrease (B→C) | Relative Decrease Rate (B→C) | 
+| :--- | :---: | :---: | :---: | :---: | :---: | 
+| Global Blood Volume A | 34.4% | 34.4% | 11.4% | 23.0% | 67.0% | 
+| Global Blood Flow Velocity β | 54.2% | 54.4% | 19.0% | 35.4% | 65.0% | 
+| Global Myocardial Blood Flow (MBF) | 61.8% | 62.0% | 19.7% | 42.3% | 68.2% | 
+| Apical Cap Blood Flow (Seg17) | 79.4% | 79.5% | 22.1% | 57.4% | 72.2% |
 
 ## 🚀 Quick Start
 
