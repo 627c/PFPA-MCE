@@ -49,8 +49,7 @@ PFPA-MCE/
 │   ├── train.py                             # Multi-task joint training script
 │   ├── evaluate.py                          # Perfusion regression accuracy evaluation
 │   ├── split_train_val.py                   # Multi-task dataset train/val split
-│   ├── run_ablation_studies.py              # Full pipeline ablation experiment automation
-│   └── README.md                            # Detailed description of the extension scheme
+│   └── run_ablation_studies.py              # Full pipeline ablation experiment automation
 ├── README.md                                # English documentation (this file)
 └── README_zh.md                             # Chinese documentation
 
