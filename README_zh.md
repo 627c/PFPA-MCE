@@ -1,0 +1,96 @@
+# PFPA-MCE: 心肌超声造影灌注量化与一致性增强管线
+
+🎓 **本项目为基于深度学习与信号处理的医学影像分析管线，独立完成了从算法设计到临床可视化的全栈开发。相关成果拟投递于中科院二区医学影像期刊（Under Review）。**
+
+* **工程底座**：从零构建了超声视频抽帧、时频净化(STFT)、AHA 17节段解剖划分及经典 Wei 氏动力学模型拟合的完整临床管线。
+* **算法创新**：针对超声声学脱落，原创设计了 ADR-Net 分割网络（搭载非对称 MRA-Gate）。在数千张临床标注数据上，DSC 达 0.7857，HD95 边界误差仅 20.35px，综合精度超越 nnU-Net 等权威基线。
+* **临床痛点突破**：为解决极度缺乏像素级金标准的困境，设计了无监督的 SL-PLMB 跨视图记忆库融合机制，将核心参数心肌血流量(MBF)的跨切面变异系数(CV)大幅降低 **68.2%**，根治了单切面评估一致性差的痛点。
+
+🚧 **代码开源声明**：为遵守学术期刊的双盲审稿原则并保护未发表的核心创新，`MRA-Gate` 及 `SL-PLMB` 的核心前向传播逻辑已做占位隐藏处理（抛出 `NotImplementedError`）。其余数据处理、信号滤波、7大基线网络及多任务扩展框架（`End2End_Multitask_Extension`）均完全开源，供查阅代码风格与工程能力。论文录用后将 100% 开源。
+
+---
+
+## 🗂️ 仓库目录结构
+本项目按照真实研发逻辑分为两大模块：
+```text
+PFPA-MCE/
+├── SL-PLMB_Core_Pipeline/                 # 论文核心方法：完整无监督一致性增强流水线
+│ ├── config/                              # 全局配置与路径设置
+│ ├── models/                              # 分割模型（核心模块暂不公开）
+│ │ ├── net_seg_only.py                    # ADR-Net 分割网络
+│ │ └── baselines.py                       # 7 种经典分割基线模型
+│ ├── core/                                # 核心算法模块
+│ │ ├── tac.py                             # TAC 信号提取与 STFT 时频滤波
+│ │ ├── perfusion.py                       # Wei 氏动力学模型灌注参数拟合
+│ │ ├── anatomy.py                         # AHA 17 节段心肌标准划分
+│ │ └── fusion.py                          # SL-PLMB 跨视图融合算法（核心暂不公开）
+│ ├── data/                                # 数据预处理工具
+│ │ ├── convert_masks.py                   # 掩膜格式标准化转换
+│ │ ├── split_seg_train_val.py             # 分割数据集训练 / 验证集划分
+│ │ ├── extract_triplets.py                # 视频关键三元组帧自动提取
+│ │ └── generate_pseudo_labels.py          # 交互式伪标签生成工具
+│ ├── utils/                               # 通用工具函数与指标计算
+│ │ ├── helpers.py                         # 通用辅助函数
+│ │ └── metrics.py                         # 全量指标：DSC、HD95、ICC (2,1) 等
+│ ├── evaluation/                          # 评估与可视化脚本
+│ │ ├── evaluate_seg_baselines.py          # 分割全指标评估
+│ │ ├── run_seg_ablation.py                # 分割模块消融实验自动化
+│ │ ├── calculate_complexity.py            # 模型参数量与计算量统计
+│ │ ├── calculate_all_icc.py               # 跨视图一致性 ICC 评估
+│ │ ├── generate_all_visualizations.py     # 学术级可视化生成
+│ │ └── plot_cv_visualization.py           # 一致性对比可视化
+│ └── run_final_clinical_pipeline.py       # 端到端临床流水线主入口
+├── Supervised_Extension/                  # 探索性扩展：监督式灌注回归基线方案
+│ ├── models/
+│ │ └── net.py                             # 多任务 ADR-Net（分割 + 灌注回归）
+│ ├── data/
+│ │ └── dataset.py                         # 时空三元组数据集加载器
+│ ├── train.py                             # 多任务联合训练脚本
+│ ├── evaluate.py                          # 灌注回归精度评估
+│ ├── split_train_val.py                   # 多任务数据集训练 / 验证集划分
+│ ├── run_ablation_studies.py              # 全管线消融实验自动化
+│ └── README.md                            # 扩展方案详细说明
+├── README.md                              # 英文文档
+└── README_zh.md                           # 中文文档（本文件）
+
+```
+
+## 📊 核心量化成果
+
+### 1. 分割网络性能对比 (ADR-Net vs SOTA)
+
+| 模型 | DSC ↑ | IoU ↑ | HD95 (px) ↓ | ASSD (px) ↓ |
+| --- | --- | --- | --- | --- |
+| UNet | 0.7362 | 0.5899 | 29.73 | 4.55 |
+| nnU-Net | 0.7540 | 0.6116 | 36.43 | 5.04 |
+| Swin-UNet | 0.7271 | 0.5775 | 20.73 | 3.96 |
+| **ADR-Net (本文方法)** | **0.7577** | **0.6192** | **20.35** | **3.80** |
+| *(注：ADR-Net 参数量仅为 nnU-Net 的 23.8%，极具床旁仪器实时部署潜力)* |  |  |  |  |
+
+### 2. 跨视图一致性提升 (CV变异系数)
+
+| 临床灌注参数 | 融合前单视图 CV | 融合后 (SL-PLMB) CV | 波动率下降 |
+| --- | --- | --- | --- |
+| 局部血容量 (A) | 34.4% | 11.4% | **↓ 67.0%** |
+| 血流速度 (β) | 54.2% | 19.0% | **↓ 65.0%** |
+| 心肌血流量 (MBF) | 62.0% | 19.7% | **↓ 68.2%** |
+
+## 💻 快速运行
+
+配置好 `config.py` 中的输入视频路径后，一键执行完整临床流水线：
+
+```bash
+cd Core_Clinical_Pipeline
+python run_final_clinical_pipeline.py
+
+```
+
+*(注：出于临床伦理与数据隐私合规要求，本项目未附带真实患者视频数据与专家标注掩膜，运行需自备数据。)*
+
+## ✉️ 联络方式
+
+刘安琪 (1104220109@stu.jiangnan.edu.cn) - 江南大学
+
+```
+
+```
