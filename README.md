@@ -15,7 +15,8 @@ Myocardial Contrast Echocardiography (MCE) perfusion analysis suffers from large
 ```text
 PFPA-MCE/
 ├── SL-PLMB_Core_Pipeline/                   # Core method of the paper: Full unsupervised consistency enhancement pipeline
-│   ├── config/                              # Global configuration and path settings
+│   ├── config/
+│   │   ├── config.py                        # Global configuration and path settings
 │   ├── models/                              # Segmentation models (core module withheld)
 │   │   ├── net_seg_only.py                  # ADR-Net segmentation network
 │   │   └── baselines.py                     # 7 classical segmentation baseline models
