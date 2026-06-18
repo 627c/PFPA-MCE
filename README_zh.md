@@ -15,7 +15,8 @@
 ```text
 PFPA-MCE/
 ├── SL-PLMB_Core_Pipeline/                 # 论文核心方法：完整无监督一致性增强流水线
-│ ├── config/                              # 全局配置与路径设置
+│ ├── config/
+│ │ ├── config.py                          # 全局配置与路径设置
 │ ├── models/                              # 分割模型（核心模块暂不公开）
 │ │ ├── net_seg_only.py                    # ADR-Net 分割网络
 │ │ └── baselines.py                       # 7 种经典分割基线模型
